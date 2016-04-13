@@ -48,7 +48,26 @@ module.exports = function(app) {
   //   res.send({ hi: 'there' });
   // });
 
-  app.post('/signin', requireSignin, Authentication.signin);
+  app.post('/signin', function(req, res, next) {
+    if (!req.body.email || !req.body.password) {
+      return res.status(400).json({message: 'Please fill out all fields'});
+    }
+    passport.authenticate('local', function(err, user, info) {
+      if (err) {
+        return next(err);
+      }
+      if (user) {
+        console.log(user);
+        return res.json({
+          userId: user._id,
+        });
+      } else {
+        console.log('no user');
+        return res.status(401).json(info);
+      }
+    })(req, res, next);
+  });
+
   app.post('/signup', Authentication.signup);
 
   //route to return the representative for the district based on the zipcode lookup
@@ -86,7 +105,7 @@ module.exports = function(app) {
   });
 
   app.get('/representatives/:id', function(req, res) {
-  res.sendFile(publicPath + '/index.html');
+    res.sendFile(publicPath + '/index.html');
   })
 
   app.get('/representatives', function(req, res) {
@@ -94,6 +113,10 @@ module.exports = function(app) {
   })
 
   app.get('/upcoming_bills', function(req, res) {
+    res.sendFile(publicPath + '/index.html');
+  })
+
+  app.get('/login', function(req, res) {
     res.sendFile(publicPath + '/index.html');
   })
 
