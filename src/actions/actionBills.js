@@ -1,6 +1,9 @@
 export const SENATE_BILL_DATA = 'SENATE_BILL_DATA'
 export const HOUSE_BILL_DATA = 'HOUSE_BILL_DATA'
 export const GET_ROLE_BILLS = 'GET_ROLE_BILLS'
+export const YES_VOTE = 'YES_VOTE'
+export const NO_VOTE = 'NO_VOTE'
+export const BILL_VOTE = 'BILL_VOTE'
 
 export function getRoleBills(role) {
   if( role === 'senator') {
@@ -60,5 +63,27 @@ export function receiveHouseBillData(bill, anything) {
       type: HOUSE_BILL_DATA,
       bill
     } 
+  }
+}
+
+export function yes(payload) {
+  return {
+    type: YES_VOTE,
+    payload
+  }
+}
+
+export function no(payload) {
+  return {
+    type: NO_VOTE,
+    payload
+  }
+}
+
+export function billVote(bill, vote) {
+  return {
+    type: BILL_VOTE,
+    bill,
+    vote
   }
 }
