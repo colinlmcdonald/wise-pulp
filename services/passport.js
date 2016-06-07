@@ -1,5 +1,5 @@
 const passport = require('passport');
-const User = require('../data/db/User.model');
+const User = require('../db/User.model');
 const config = require('../config');
 const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -19,7 +19,11 @@ const localLogin = new LocalStrategy(localOptions, function(email, password, don
 
     //compare passwords - is 'password' equal to user.password?
     user.comparePassword(password, function(err, isMatch) {
-      if (err) { return done(err); }
+      if (err) { 
+        console.log('this is err in comparePassword', err)
+        return done(err); 
+      }
+      console.log('this is match', isMatch)
       if(!isMatch) { return done(null, false) }
 
       return done(null, user);

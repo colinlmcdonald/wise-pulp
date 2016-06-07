@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { Component } from 'react';
+
+import './Bills.scss';
 
 const Bill = ({handleLoginCheck, bill, onNoChange, onYesChange}) => (
   <div>
@@ -17,7 +19,8 @@ const Bill = ({handleLoginCheck, bill, onNoChange, onYesChange}) => (
       <input type="submit" value='Vote!' className="btn btn-default" />
     </form>
       {bill.login === false ? <div className='registration-error'>You must be logged in to vote</div> : null}
-      {bill.voted ? bill.voted === 'yes' ? <div className='vote-indicator'>You voted yes!</div> : <div>You voted no!</div> : null}
+      {bill.voted === true ? <div className='vote-indicator'>You voted yes!</div> : null}
+      {bill.voted === false ? <div className='vote-indicator'>You voted no!</div> : null}
     <hr />
   </div> 
 )
