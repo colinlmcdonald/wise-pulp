@@ -3,6 +3,7 @@ import configureMockStore           from 'redux-mock-store'
 import thunk                        from 'redux-thunk'
 import { expect }                   from 'chai'
 import deepFreeze                   from 'deep-freeze'
+import sinon                        from 'sinon'
 
 import { BILL_VOTE,
          BILL_DATA,
@@ -14,7 +15,8 @@ import { BILL_VOTE,
          userVotes,
          getVotingHistory,
          getSenateBillData,
-         getHouseBillData  }        from '../src/actions/actionBills'
+         getHouseBillData,
+         localStorage  }            from '../src/actions/actionBills'
 import bills                        from '../src/reducers/reducerBills'
 
 const middlewares = [ thunk ]
@@ -26,16 +28,31 @@ const bill = {_id: 123456}
 
 deepFreeze(bill)
 deepFreeze(dummyData)
+let getItem, setItem
 
 describe('User Voting', () => {
+  beforeEach(() => {
+    getItem = sinon.stub(localStorage, 'getItem', prop => {
+      if (prop === 'token') {
+        return 'blahblahblah'
+      } else {
+        return dummyData
+      }
+    })
+    setItem = sinon.stub(localStorage, 'setItem')
+  })
+
   afterEach(() => {
+    getItem.restore()
+    setItem.restore()
     nock.cleanAll()
   })
+
   it('creates BILL_VOTE when posting a bill vote is done', () => {
     nock('https://localhost:3500', {
       reqheaders: {
         'Content-Type': 'application/json',
-        'Authorization': 'test'
+        'Authorization': 'blahblahblah'
       }
     })
       .post('/userOpinions', JSON.stringify({
@@ -58,7 +75,20 @@ describe('User Voting', () => {
 
 describe('Upcoming Bills', () => {
 
+  beforeEach(() => {
+    getItem = sinon.stub(localStorage, 'getItem', prop => {
+      if (prop === 'token') {
+        return 'blahblahblah'
+      } else {
+        return 'undefined'
+      }
+    })
+    setItem = sinon.stub(localStorage, 'setItem')
+  })
+
   afterEach(() => {
+    getItem.restore()
+    setItem.restore()
     nock.cleanAll()
   })
 
@@ -93,9 +123,18 @@ describe('Upcoming Bills', () => {
   it('should add a type property to each bill', () => {
     expect(addBillType(dummyData, 'representative', true)).to.deep.equal([{_id: 1234567, representative: true}, {_id: 12345, representative: true}, {_id: 1234, representative: true}, {_id: 123456, representative: true}])
   })
+
+  it('should receive senate bill data', () => {
+    expect(receiveSenateBillData(dummyData)).to.deep.equal([{
+      type: BILL_DATA,
+      payload: [{_id: 1234567, representative: true}, {_id: 12345, representative: true}, {_id: 1234, representative: true}, {_id: 123456, representative: true}]
+    }])
+  })
 })
 
+
 describe('Representatives Voting History', () => {
+
   afterEach(() => {
     nock.cleanAll()
   })

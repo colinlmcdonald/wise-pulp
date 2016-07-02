@@ -8,6 +8,14 @@ export const BILL_DATA          = 'BILL_DATA'
 export const SET_REP_ROLE       = 'SET_REP_ROLE'
 export const LOGIN_CHECK        = 'LOGIN_CHECK'
 
+export let localStorage = {
+  getItem: prop => {},
+  setItem: (prop, val) => {}
+}
+
+if (window.localStorage) {
+  localStorage = window.localStorage
+}
 
 export function getRoleBills(role) {
   if (role === 'representative') {
