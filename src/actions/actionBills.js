@@ -9,7 +9,7 @@ export const SET_REP_ROLE       = 'SET_REP_ROLE'
 export const LOGIN_CHECK        = 'LOGIN_CHECK'
 
 export let localStorage = {
-  getItem: prop => {},
+  getItem: (prop) => {},
   setItem: (prop, val) => {}
 }
 
@@ -176,8 +176,12 @@ export function loginCheck(user, bill) {
   }
 }
 
-export function updateLocalStorage() {
-  fetch('/userOpinions', {
+export function updateLocalStorage(testing) {
+  let url = '/userOpinions'
+  if (testing) {
+    url = 'https://localhost:3500/userOpinions'
+  }
+  return fetch(url, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -190,6 +194,7 @@ export function updateLocalStorage() {
     localStorage.setItem('bills', JSON.stringify(json))
   })
 }
+
 export function userVotes(bill, vote, user, testing) {
   let url = '/userOpinions'
   if (testing) {

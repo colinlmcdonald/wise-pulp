@@ -63,7 +63,6 @@ export function idChecker(state, type, bill, id, prop) {
       let after = type.slice(i + 1, type.length)
       before.push(bill)
       let newBills = before.concat(after)
-      console.log('these are hte new bills after vote', newBills)
       return Object.assign({}, state, {
         [prop]: newBills
       })

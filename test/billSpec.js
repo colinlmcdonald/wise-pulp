@@ -16,6 +16,7 @@ import { BILL_VOTE,
          getVotingHistory,
          getSenateBillData,
          getHouseBillData,
+         updateLocalStorage,
          localStorage  }            from '../src/actions/actionBills'
 import bills                        from '../src/reducers/reducerBills'
 
@@ -69,7 +70,28 @@ describe('User Voting', () => {
       .then(() => {
         expect(store.getActions()).to.deep.equal(expectedActions)
       })
+  })
 
+  it('should update localStorage with users votes', done => {
+    const userBill = {_id: 123456, decision: true}
+    nock('https://localhost:3500', {
+      reqheaders: {
+        'Content-Type': 'application/json',
+        'Authorization': 'blahblahblah'
+      }
+    })
+    .get('/userOpinions')
+    .reply(200, userBill)
+    setItem.restore()
+    setItem = sinon.spy(localStorage, 'setItem')
+    const store = mockStore()
+    store.dispatch(updateLocalStorage(true))
+         .then(() => {
+            expect(setItem.called).to.be.true
+            expect(setItem.calledWith('bills', undefined)).to.be.true
+            expect(setItem.calledWith('bills', JSON.stringify(userBill))).to.be.true
+         })
+         .then(done).catch(done)
   })
 })
 
@@ -120,15 +142,16 @@ describe('Upcoming Bills', () => {
       })
   })
 
-  it('should add a type property to each bill', () => {
+  it('should add a type property to each bill and return them if there is nothing in localStorage', () => {
     expect(addBillType(dummyData, 'representative', true)).to.deep.equal([{_id: 1234567, representative: true}, {_id: 12345, representative: true}, {_id: 1234, representative: true}, {_id: 123456, representative: true}])
   })
 
-  it('should receive senate bill data', () => {
-    expect(receiveSenateBillData(dummyData)).to.deep.equal([{
-      type: BILL_DATA,
-      payload: [{_id: 1234567, representative: true}, {_id: 12345, representative: true}, {_id: 1234, representative: true}, {_id: 123456, representative: true}]
-    }])
+  it('should add a type property to each bill and update those bills with the voted prop of each bill in localStorage', () => {
+    getItem.restore()
+    getItem = sinon.stub(localStorage, 'getItem', () => {
+      return JSON.stringify([{billNumber: 1234567, representative: true, decision: true}, {billNumber: 1234, representative: true, decision: false}, {billNumber: 123456, representative: true, decision: true}])
+    })
+    expect(addBillType(dummyData, 'representative', true)).to.deep.equal([{_id: 1234567, representative: true, voted: true}, {_id: 12345, representative: true}, {_id: 1234, representative: true, voted: false}, {_id: 123456, representative: true, voted: true}])
   })
 })
 
@@ -138,6 +161,7 @@ describe('Representatives Voting History', () => {
   afterEach(() => {
     nock.cleanAll()
   })
+
   it('creates REP_VOTING_HISTORY when retrieving a reps voting history is done', () => {
     nock('https://www.govtrack.us')
       .get('/api/v2/vote_voter?order_by=-created&person=123456')
