@@ -50,6 +50,7 @@
     "mongoose": "^4.4.10",
     "morgan": "1.7.0",
     "node-sass": "^3.6.0",
+    "nyc": "^6.6.1",
     "passport": "0.3.2",
     "passport-jwt": "2.0.0",
     "passport-local": "1.0.0",

@@ -133,7 +133,7 @@ describe('Rep Words Buttons', () => {
     expect(wrapper.find('.moreWords')).to.have.length(1)
   })
 
-  it('process clicks', () => {
+  it('processes clicks', () => {
 
     wrapper.find('.lessWords').simulate('click')
     expect(lessWords.calledOnce).to.equal(true)
@@ -161,7 +161,7 @@ describe('Rep Words Component', () => {
     return {id: random}
   }
   function mockData() {
-    return {hello: 'world'}
+    return [{hello: 'world'}]
   }
   const data            = mockData()
   let dispatch          = sinon.spy()
@@ -179,27 +179,15 @@ describe('Rep Words Component', () => {
   })
 
   it('does not load Chart until there is data', () => {
-    expect(wrapper.contains(Chart)).to.equal(false)
+    expect(wrapper.find(Chart)).to.have.length(0)
   })
 
   it('loads Chart when there is data', () => {
-    wrapper = shallow(<RepWords data={data} />)
-    expect(wrapper.contains(Chart)).to.equal(true)
+    wrapper = mount(<RepWords data={data} representatives={representatives} dispatch={dispatch} params={params}/>)
+    expect(wrapper.find(Chart)).to.have.length(1)
   })
 
 })
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

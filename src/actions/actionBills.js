@@ -13,9 +13,9 @@ export let localStorage = {
   setItem: (prop, val) => {}
 }
 
-if (window.localStorage) {
-  localStorage = window.localStorage
-}
+// if (window && window.localStorage) {
+//   localStorage = window.localStorage
+// }
 
 export function getRoleBills(role) {
   if (role === 'representative') {

@@ -2,9 +2,9 @@ import React, { Component }               from 'react'
 import { connect }                        from 'react-redux'
 import { yes, no, userVotes, loginCheck } from '../../actions/actionBills'
 import Bill from './Bill'
-import './Bills.scss'
+//import './Bills.scss'
 
-export default class BillList extends Component {
+export class BillList extends Component {
 
   constructor(props) {
     super(props)
@@ -45,17 +45,15 @@ export default class BillList extends Component {
     return (
       <div>
        {bills.map( (bill, i)=> {
-         if (role) {
-          if (bill[role]) {
-            while (count < billsToShow) {
-              count++
-              return <Bill bill={bill} 
-                           handleLoginCheck={this.handleLoginCheck}
-                           onYesChange={this.onYesChange}
-                           onNoChange={this.onNoChange} 
-                           key={i}/>
-            }
-           }
+         if (role && bill[role]) {
+          while (count < billsToShow) {
+            count++
+            return <Bill bill={bill} 
+                         handleLoginCheck={this.handleLoginCheck}
+                         onYesChange={this.onYesChange}
+                         onNoChange={this.onNoChange} 
+                         key={i}/>
+          }
         } else {
            while (count < billsToShow) {
                 count++
