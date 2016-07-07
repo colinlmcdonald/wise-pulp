@@ -393,14 +393,12 @@ describe('BillList and Bills components', () => {
   it('if no role is specified, displays all Upcoming Bills', () => {
     wrapper = mount(<BillList.BillList dispatch={dispatch} bills={bills} billsToShow={10}/>)
     let children = wrapper.children()
-    let newChildren = children.filterWhere(node => {
-      return node.props('bill').type === undefined
-    })
+    let newChildren = children.filterWhere(node => node.props('bill').type === undefined)
     expect(newChildren).to.have.length(10)
   })
 
   it('dispatches an update of the Yes vote when Yes is clicked on for that bill', () => {
-    wrapper = shallow(Bill.default )
+    console.log(wrapper.filterWhere(node => node.props('key') === 0))
   })
 
   it('dispatches an update of the No vote when No is clicked on for that bill', () => {

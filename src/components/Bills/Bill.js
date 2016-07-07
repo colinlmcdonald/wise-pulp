@@ -12,9 +12,9 @@ const Bill = ({handleLoginCheck, bill, onNoChange, onYesChange}) => (
     <h4>Cast Your Vote!</h4>
 
     <form className="user_vote" action="#" onSubmit={e => handleLoginCheck(e, bill)}>
-      <input type="radio" name="vote" value="yea" onChange={e => onYesChange(bill)}/> Yes
+      <input id="yes_vote" type="radio" name="vote" value="yea" onChange={e => onYesChange(bill)}/> Yes
        <br />
-      <input type="radio" name="vote" value="nay" onChange={e => onNoChange(bill)}/> No
+      <input id="no_vote" type="radio" name="vote" value="nay" onChange={e => onNoChange(bill)}/> No
       <br />
       <input type="submit" value='Vote!' className="btn btn-default" />
     </form>
